@@ -1,41 +1,46 @@
 using UnityEngine;
+using UnityEngine.XR;
 
-public class EyeGazeController_ : MonoBehaviour
+public class EyeGazeController_OpenXR : MonoBehaviour
 {
-    private OVRPlugin.EyeGazesState EyeGazeState;
     public GameObject RightTargetObject;
     public GameObject LeftTargetObject;
     public Camera RightTargetCamera;
     public Camera LeftTargetCamera;
+
+    private InputDevice eyeDevice;
+
+    void Start()
+    {
+        eyeDevice = InputDevices.GetDeviceAtXRNode(XRNode.CenterEye);
+    }
+
     void Update()
     {
-
-        if (OVRPlugin.GetEyeGazesState(OVRPlugin.Step. Render, -1, ref EyeGazeState))
+        if (!eyeDevice.isValid)
         {
-            var LeftEyegaze = EyeGazeState.EyeGazes[(int)OVRPlugin.Eye.Left];
-            var RightEyegaze = EyeGazeState.EyeGazes[(int)OVRPlugin.Eye.Right];
-
-            if (LeftEyegaze.IsValid)
-            {
-                var LeftPose = LeftEyegaze.Pose.ToOVRPose();
-                var RightPose = RightEyegaze.Pose.ToOVRPose();
-
-                Vector3 GazeLeftDirection = LeftPose. orientation * Vector3. forward;
-                Vector3 GazeRightDirection = RightPose. orientation* Vector3. forward;
-
-                Vector3 GazeLeftPosition = LeftTargetCamera.transform.position;
-                Vector3 GazeRightPosition = RightTargetCamera.transform.position;
-
-                if (Physics.Raycast(GazeLeftPosition, GazeLeftDirection, out RaycastHit lefthitinfo))
-                {
-                    LeftTargetObject. transform. position = lefthitinfo. point;
-                }
-                if (Physics.Raycast(GazeRightPosition, GazeRightDirection, out RaycastHit righthitinfo))
-                {
-                    RightTargetObject.transform.position = righthitinfo. point;
-                }
-            }
+            eyeDevice = InputDevices.GetDeviceAtXRNode(XRNode.CenterEye);
+            return;
         }
 
+        if (eyeDevice.TryGetFeatureValue(CommonUsages.leftEyeRotation, out Quaternion leftRot) &&
+            eyeDevice.TryGetFeatureValue(CommonUsages.rightEyeRotation, out Quaternion rightRot))
+        {
+            Vector3 leftDir = leftRot * Vector3.forward;
+            Vector3 rightDir = rightRot * Vector3.forward;
+
+            Vector3 leftPos = LeftTargetCamera.transform.position;
+            Vector3 rightPos = RightTargetCamera.transform.position;
+
+            if (Physics.Raycast(leftPos, leftDir, out RaycastHit leftHit))
+            {
+                LeftTargetObject.transform.position = leftHit.point;
+            }
+
+            if (Physics.Raycast(rightPos, rightDir, out RaycastHit rightHit))
+            {
+                RightTargetObject.transform.position = rightHit.point;
+            }
+        }
     }
 }
