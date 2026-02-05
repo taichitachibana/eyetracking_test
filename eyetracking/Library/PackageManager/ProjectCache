@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638920495949519837
-    m_Hash: 424551386
+      ticks: 639058794127810779
+    m_Hash: 151262468
   m_LockFileStatus:
     m_FilePath: C:/Users/kuruk/Documents/unity_project/eyetracking_test/eyetracking/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638920495949559935
-    m_Hash: 2910942765
+      ticks: 639058794127846434
+    m_Hash: 932101204
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -22,19 +22,19 @@ m_LocalPackages:
 m_ProjectPath: C:/Users/kuruk/Documents/unity_project/eyetracking_test/eyetracking/Packages
 m_EditorVersion: 2022.3.62f1 (4af31df58517)
 m_ResolvedPackages:
-- packageId: com.meta.xr.sdk.core@78.0.0
+- packageId: com.meta.xr.sdk.core@83.0.4
   testable: 0
   isDirectDependency: 1
-  version: 78.0.0
+  version: 83.0.4
   source: 1
-  resolvedPath: C:\Users\kuruk\Documents\unity_project\eyetracking_test\eyetracking\Library\PackageCache\com.meta.xr.sdk.core@78.0.0
+  resolvedPath: C:\Users\kuruk\Documents\unity_project\eyetracking_test\eyetracking\Library\PackageCache\com.meta.xr.sdk.core@83.0.4
   assetPath: Packages/com.meta.xr.sdk.core
   name: com.meta.xr.sdk.core
   displayName: Meta XR Core SDK
   author:
     name: Meta Platforms, Inc.
     email: 
-    url: https://developer.oculus.com/
+    url: https://developers.meta.com/horizon/
   category: 
   type: 
   description: Meta XR Core SDK package provides the latest features to create immersive
@@ -66,6 +66,11 @@ m_ResolvedPackages:
     - 76.0.1
     - 77.0.0
     - 78.0.0
+    - 81.0.0
+    - 83.0.0
+    - 83.0.1
+    - 83.0.3
+    - 83.0.4
     compatible:
     - 59.0.0
     - 60.0.0
@@ -90,6 +95,11 @@ m_ResolvedPackages:
     - 76.0.1
     - 77.0.0
     - 78.0.0
+    - 81.0.0
+    - 83.0.0
+    - 83.0.1
+    - 83.0.3
+    - 83.0.4
     recommended: 
     deprecated: []
   dependencies: []
@@ -98,9 +108,9 @@ m_ResolvedPackages:
   - SDK
   - Meta
   - XR
-  - Utilities
   - Oculus
   - Quest
+  - Utilities
   registry:
     id: main
     name: 
@@ -111,7 +121,7 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 1
   isAssetStorePackage: 1
-  datePublishedTicks: 638919114147080000
+  datePublishedTicks: 639057151428820000
   documentationUrl: https://developer.oculus.com/documentation/unity/
   hasRepository: 0
   repository:
@@ -231,12 +241,24 @@ m_ResolvedPackages:
     - 2.8.2
     - 2.9.1
     - 2.9.2
+    - 2.9.3
+    - 2.10.0
+    - 2.10.1
+    - 2.10.2
+    - 2.11.2
+    - 2.11.3
     compatible:
     - 2.7.1
     - 2.8.1
     - 2.8.2
     - 2.9.1
     - 2.9.2
+    - 2.9.3
+    - 2.10.0
+    - 2.10.1
+    - 2.10.2
+    - 2.11.2
+    - 2.11.3
     recommended: 2.7.1
     deprecated: []
   dependencies: []
@@ -513,6 +535,8 @@ m_ResolvedPackages:
     - 3.2.0-pre.11
     - 3.2.0-pre.12
     - 3.2.0-pre.13
+    - 3.2.0-pre.14
+    - 3.2.0-pre.15
     - 4.0.0-pre.1
     - 4.0.0-pre.2
     compatible:
@@ -532,6 +556,8 @@ m_ResolvedPackages:
     - 3.2.0-pre.11
     - 3.2.0-pre.12
     - 3.2.0-pre.13
+    - 3.2.0-pre.14
+    - 3.2.0-pre.15
     - 4.0.0-pre.1
     - 4.0.0-pre.2
     recommended: 3.0.9
@@ -689,6 +715,7 @@ m_ResolvedPackages:
     - 1.8.7
     - 1.8.8
     - 1.8.9
+    - 1.8.10
     compatible:
     - 1.7.7
     - 1.8.0
@@ -701,6 +728,7 @@ m_ResolvedPackages:
     - 1.8.7
     - 1.8.8
     - 1.8.9
+    - 1.8.10
     recommended: 1.7.7
     deprecated: []
   dependencies:
@@ -886,13 +914,15 @@ m_ResolvedPackages:
     - 1.9.6
     - 1.9.7
     - 1.9.8
+    - 1.9.9
     compatible:
     - 1.9.4
     - 1.9.5
     - 1.9.6
     - 1.9.7
     - 1.9.8
-    recommended: 1.9.8
+    - 1.9.9
+    recommended: 1.9.9
     deprecated:
     - 1.8.0-pre.1
   dependencies:
@@ -1014,12 +1044,18 @@ m_ResolvedPackages:
     - 4.4.1
     - 4.5.0
     - 4.5.1
+    - 4.5.2
+    - 4.5.3
+    - 4.5.4
     compatible:
     - 4.4.0
     - 4.4.1
     - 4.5.0
     - 4.5.1
-    recommended: 4.5.1
+    - 4.5.2
+    - 4.5.3
+    - 4.5.4
+    recommended: 4.5.4
     deprecated: []
   dependencies:
   - name: com.unity.modules.vr
@@ -3234,9 +3270,11 @@ m_ResolvedPackages:
     - 2.5.0
     - 2.5.1
     - 2.5.2
+    - 2.5.3
     compatible:
     - 2.5.2
-    recommended: 2.5.2
+    - 2.5.3
+    recommended: 2.5.3
     deprecated: []
   dependencies:
   - name: com.unity.modules.xr
@@ -3337,9 +3375,13 @@ m_ResolvedPackages:
     - 2.1.10
     - 2.1.11
     - 2.1.12
+    - 2.1.13
+    - 3.0.0
     compatible:
     - 2.1.12
-    recommended: 2.1.12
+    - 2.1.13
+    - 3.0.0
+    recommended: 2.1.13
     deprecated: []
   dependencies:
   - name: com.unity.modules.vr
@@ -3437,10 +3479,16 @@ m_ResolvedPackages:
     - 2.0.21
     - 2.0.22
     - 2.0.23
+    - 2.0.25
+    - 2.0.26
+    - 2.0.27
     compatible:
     - 2.0.22
     - 2.0.23
-    recommended: 2.0.23
+    - 2.0.25
+    - 2.0.26
+    - 2.0.27
+    recommended: 2.0.27
     deprecated: []
   dependencies:
   - name: com.unity.test-framework
@@ -3550,10 +3598,17 @@ m_ResolvedPackages:
     - 3.0.34
     - 3.0.35
     - 3.0.36
+    - 3.0.37
+    - 3.0.38
+    - 3.0.39
     compatible:
     - 3.0.36
-    recommended: 3.0.36
-    deprecated: []
+    - 3.0.37
+    - 3.0.38
+    - 3.0.39
+    recommended: 3.0.39
+    deprecated:
+    - 3.0.37
   dependencies:
   - name: com.unity.ext.nunit
     version: 1.0.6
@@ -3686,9 +3741,11 @@ m_ResolvedPackages:
     - 0.1.0-preview.1
     - 0.1.0-preview.2
     - 1.0.0
+    - 1.0.1
     compatible:
     - 1.0.0
-    recommended: 1.0.0
+    - 1.0.1
+    recommended: 1.0.1
     deprecated: []
   dependencies: []
   resolvedDependencies: []
@@ -3762,9 +3819,15 @@ m_ResolvedPackages:
     - 1.1.1
     - 1.2.2
     - 1.2.3
+    - 1.2.4
+    - 1.3.0
+    - 1.3.1
     compatible:
     - 1.2.3
-    recommended: 1.2.3
+    - 1.2.4
+    - 1.3.0
+    - 1.3.1
+    recommended: 1.2.4
     deprecated: []
   dependencies: []
   resolvedDependencies: []
@@ -3993,9 +4056,13 @@ m_ResolvedPackages:
     - 1.2.4
     - 1.2.5
     - 1.2.6
+    - 1.2.7
+    - 1.3.0
     compatible:
     - 1.2.6
-    recommended: 1.2.6
+    - 1.2.7
+    - 1.3.0
+    recommended: 1.2.7
     deprecated: []
   dependencies:
   - name: com.unity.test-framework
@@ -4075,9 +4142,11 @@ m_ResolvedPackages:
     - 2.0.0
     - 2.0.1
     - 2.1.0
+    - 2.1.1
     compatible:
     - 2.1.0
-    recommended: 2.1.0
+    - 2.1.1
+    recommended: 2.1.1
     deprecated: []
   dependencies: []
   resolvedDependencies: []
