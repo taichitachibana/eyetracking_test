@@ -685,7 +685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1544121381
 Transform:
   m_ObjectHideFlags: 0
@@ -884,6 +884,8 @@ MonoBehaviour:
   _displayDuration: 1
   _forwardDistance: 0.3
   _verticalOffset: 0.18
+  _minHorizontalOffset: -0.3
+  _maxHorizontalOffset: 0.3
   _minScale: 0.3
   _maxScale: 0.3
   _flickerFrequency: 8

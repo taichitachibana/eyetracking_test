@@ -14,6 +14,8 @@ public class DisturbanceController : MonoBehaviour
     [Header("Position")]
     [SerializeField] private float _forwardDistance = 0.30f;
     [SerializeField] private float _verticalOffset = 0.18f;
+    [SerializeField] private float _minHorizontalOffset = -0.15f;
+    [SerializeField] private float _maxHorizontalOffset = 0.15f;
 
     [Header("Disturbance Size")]
     [SerializeField, Range(0.01f, 0.3f)] private float _minScale = 0.05f;
@@ -35,6 +37,7 @@ public class DisturbanceController : MonoBehaviour
     private Camera _cam;
     private bool _isActive = false;
     private float _timer = 0f;
+    private float _horizontalOffset = 0f;
 
     private static readonly int ID_Brightness = Shader.PropertyToID("_Brightness");
     private static readonly int ID_EdgeSoftness = Shader.PropertyToID("_EdgeSoftness");
@@ -63,7 +66,8 @@ public class DisturbanceController : MonoBehaviour
 
         Vector3 forward = _cam.transform.forward;
         Vector3 up = _cam.transform.up;
-        transform.position = _cam.transform.position + forward * _forwardDistance + up * _verticalOffset;
+        Vector3 right = _cam.transform.right;
+        transform.position = _cam.transform.position + forward * _forwardDistance + up * _verticalOffset + right * _horizontalOffset;
         transform.rotation = _cam.transform.rotation;
 
         float freq = _flickerFrequency + Random.Range(-_flickerFreqVariation, _flickerFreqVariation);
@@ -80,6 +84,7 @@ public class DisturbanceController : MonoBehaviour
     {
         float s = Random.Range(_minScale, _maxScale);
         transform.localScale = new Vector3(s, s, 1f);
+        _horizontalOffset = Random.Range(_minHorizontalOffset, _maxHorizontalOffset);
         _timer = _displayDuration;
         _isActive = true;
         _renderer.enabled = true;
