@@ -31,6 +31,12 @@ public class DisturbanceController : MonoBehaviour
     [SerializeField] private float _maxSize = 0.06f;
     [SerializeField] private Color _particleColor = Color.white;
 
+    [Header("Vection")]
+    [Tooltip("距離による速さの補正強度。1=線形補正、0=補正なし")]
+    [SerializeField, Range(0f, 1f)] private float _speedDepthScale = 1.0f;
+    [Tooltip("距離によるサイズの補正強度。1=線形補正、0=補正なし")]
+    [SerializeField, Range(0f, 1f)] private float _sizeDepthScale = 1.0f;
+
     private ParticleSystem _ps;
     private ParticleSystem.Particle[] _particles;
 
@@ -135,8 +141,12 @@ public class DisturbanceController : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            // ローカル座標で移動
-            _localPositions[i] += _localFlowDir * _speeds[i] * Time.deltaTime;
+            // 距離に反比例した速さでローカル座標移動（近いほど速く）
+            float dist0 = _localPositions[i].magnitude;
+            float tNorm = Mathf.Clamp01((dist0 - _innerRadius) / (_outerRadius - _innerRadius));
+            float speedMul = Mathf.Lerp(2.0f, 0.5f, tNorm);  // innerRadius側=2倍、outerRadius側=0.5倍
+            float effectiveSpeed = _speeds[i] * Mathf.Lerp(1.0f, speedMul, _speedDepthScale);
+            _localPositions[i] += _localFlowDir * effectiveSpeed * Time.deltaTime;
 
             // 中心視野侵入チェック（ローカルZのXY成分の角度）
             float angle = Vector3.Angle(Vector3.forward, _localPositions[i]);
@@ -183,7 +193,12 @@ public class DisturbanceController : MonoBehaviour
         }
 
         _localPositions[i] = pos;
-        _particles[i].startSize = Random.Range(_minSize, _maxSize);
+
+        // 距離に反比例したサイズ（近いほど大きく）
+        float distN = Mathf.Clamp01((pos.magnitude - _innerRadius) / (_outerRadius - _innerRadius));
+        float sizeMul = Mathf.Lerp(2.0f, 0.5f, distN);
+        float baseSize = Random.Range(_minSize, _maxSize);
+        _particles[i].startSize = baseSize * Mathf.Lerp(1.0f, sizeMul, _sizeDepthScale);
         _particles[i].startColor = _particleColor;
         _particles[i].remainingLifetime = float.MaxValue;
     }

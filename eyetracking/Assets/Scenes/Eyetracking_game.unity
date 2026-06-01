@@ -167,6 +167,8 @@ MonoBehaviour:
   _minSize: 0.02
   _maxSize: 0.06
   _particleColor: {r: 1, g: 1, b: 1, a: 1}
+  _speedDepthScale: 1
+  _sizeDepthScale: 1
 --- !u!199 &32681879
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -5542,7 +5544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1544121381
 Transform:
   m_ObjectHideFlags: 0
