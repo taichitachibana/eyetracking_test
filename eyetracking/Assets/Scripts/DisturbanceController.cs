@@ -23,7 +23,8 @@ public class DisturbanceController : MonoBehaviour
     [SerializeField] private float _outerRadius = 4.0f;
 
     [Header("Peripheral Mask")]
-    [SerializeField] private float _centerExcludeDeg = 20.0f;
+    [SerializeField] private float _centerExcludeDeg = 15.0f;
+    [SerializeField] private float _verticalOffsetDeg = -10.0f;
 
     [Header("Particles")]
     [SerializeField] private int _particleCount = 200;
