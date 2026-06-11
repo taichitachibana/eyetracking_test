@@ -29,6 +29,17 @@ public class GazeMaskController : MonoBehaviour
 
     private void Update()
     {
+        // Enterキーでリセット
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            _elapsed = 0f;
+
+            if (_enableShrink)
+            {
+                _radius = _initialRadius;
+            }
+        }
+
         // カメラの正面に追従
         transform.position = _cam.transform.position + _cam.transform.forward * 0.31f;
         transform.rotation = _cam.transform.rotation;
