@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -13,6 +14,10 @@ public class GazeRawLogger : MonoBehaviour
     [SerializeField] private int _trialsPerBlock = 10;
     [SerializeField] private float _blinkConfidenceThreshold = 0.3f;
 
+    // 60Hz固定サンプリング
+    private const float SampleInterval = 1f / 60f;
+    private float _sampleTimer = 0f;
+
     private bool _isRecording = false;
     private float _trialTimer = 0f;
     private int _currentTrial = 0;
@@ -24,6 +29,10 @@ public class GazeRawLogger : MonoBehaviour
     private StreamWriter _rawWriter;
 
     private Quaternion _headRefRotation = Quaternion.identity;
+    private Vector3 _headRefPosition = Vector3.zero;   // 記録開始時の頭部位置（原点）
+
+    // 試行ごとのバッファ
+    private List<string> _trialBuffer = new List<string>();
 
     private void Awake()
     {
@@ -44,6 +53,8 @@ public class GazeRawLogger : MonoBehaviour
 
     private void OnDestroy()
     {
+        // 未書き出しのバッファが残っていれば書き出す
+        FlushBuffer();
         _rawWriter?.Flush();
         _rawWriter?.Close();
     }
@@ -56,12 +67,23 @@ public class GazeRawLogger : MonoBehaviour
             return;
         }
 
-        SampleFrame();
+        // 60Hzサンプリング
+        _sampleTimer += Time.deltaTime;
+        if (_sampleTimer >= SampleInterval)
+        {
+            _sampleTimer -= SampleInterval;
+            SampleFrame();
+        }
 
+        // 試行タイマー
         _trialTimer += Time.deltaTime;
         if (_trialTimer >= _trialDuration)
         {
             _trialTimer -= _trialDuration;
+
+            // 試行終了 → バッファを書き出し
+            FlushBuffer();
+
             _currentTrial++;
             if (_currentTrial >= _trialsPerBlock)
             {
@@ -75,10 +97,13 @@ public class GazeRawLogger : MonoBehaviour
     {
         _isRecording = true;
         _trialTimer = 0f;
+        _sampleTimer = 0f;
         _currentTrial = 0;
         _blockNumber = 0;
         _frameIndex = 0;
         _headRefRotation = _cam != null ? _cam.transform.rotation : Quaternion.identity;
+        _headRefPosition = _cam != null ? _cam.transform.position : Vector3.zero;
+        _trialBuffer.Clear();
     }
 
     private void SampleFrame()
@@ -95,11 +120,16 @@ public class GazeRawLogger : MonoBehaviour
         float rightConf = right.IsValid ? right.Confidence : 0f;
         bool isBlink = Mathf.Max(leftConf, rightConf) < _blinkConfidenceThreshold;
 
+        // 頭部位置差分（記録開始時を原点）
         Vector3 headPos = _cam.transform.position;
         Quaternion headRot = _cam.transform.rotation;
+        Vector3 headDelta = headPos - _headRefPosition;
 
-        Vector3 leftDirLocal = left.IsValid ? (left.Pose.ToOVRPose().orientation * Vector3.forward) : Vector3.forward;
-        Vector3 rightDirLocal = right.IsValid ? (right.Pose.ToOVRPose().orientation * Vector3.forward) : Vector3.forward;
+        // 注視方向（両眼合成）
+        Vector3 leftDirLocal = left.IsValid
+            ? (left.Pose.ToOVRPose().orientation * Vector3.forward) : Vector3.forward;
+        Vector3 rightDirLocal = right.IsValid
+            ? (right.Pose.ToOVRPose().orientation * Vector3.forward) : Vector3.forward;
 
         Vector3 leftDirWorld = headRot * leftDirLocal;
         Vector3 rightDirWorld = headRot * rightDirLocal;
@@ -108,61 +138,47 @@ public class GazeRawLogger : MonoBehaviour
                              + (rightConf > 0f ? rightDirWorld : Vector3.zero)).normalized;
         if (combinedDir == Vector3.zero) combinedDir = headRot * Vector3.forward;
 
-        Vector3 vpRaw = _cam.WorldToViewportPoint(headPos + combinedDir);
-        float gazeRawX = vpRaw.x - 0.5f;
-        float gazeRawY = vpRaw.y - 0.5f;
-
-        Quaternion headDelta = Quaternion.Inverse(_headRefRotation) * headRot;
-        Vector3 correctedDir = Quaternion.Inverse(headDelta) * combinedDir;
+        // 頭部回転補正済み注視座標（視界中心 = 0,0）
+        Quaternion headDeltaRot = Quaternion.Inverse(_headRefRotation) * headRot;
+        Vector3 correctedDir = Quaternion.Inverse(headDeltaRot) * combinedDir;
         Vector3 vpCorrected = _cam.WorldToViewportPoint(headPos + correctedDir);
         float gazeCorrX = vpCorrected.x - 0.5f;
         float gazeCorrY = vpCorrected.y - 0.5f;
 
-        WriteRawRow(
-            _frameIndex, _blockNumber, _currentTrial, Time.time,
-            headPos, headRot,
-            leftDirWorld, leftConf, rightDirWorld, rightConf,
-            gazeRawX, gazeRawY, gazeCorrX, gazeCorrY,
-            isBlink
-        );
+        // PC絶対時間
+        string absTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
+        var sb = new StringBuilder();
+        sb.Append($"{_frameIndex},{_blockNumber},{_currentTrial},{absTime},");
+        sb.Append($"{headDelta.x:F4},{headDelta.y:F4},{headDelta.z:F4},");
+        sb.Append($"{gazeCorrX:F4},{gazeCorrY:F4},");
+        sb.Append(isBlink ? "1" : "0");
+
+        _trialBuffer.Add(sb.ToString());
         _frameIndex++;
+    }
+
+    // バッファをまとめてCSVに書き出す
+    private void FlushBuffer()
+    {
+        if (_trialBuffer.Count == 0) return;
+
+        foreach (var line in _trialBuffer)
+            _rawWriter.WriteLine(line);
+
+        _rawWriter.Flush();
+        _trialBuffer.Clear();
     }
 
     private void InitRawCSV()
     {
         _rawWriter = new StreamWriter(_rawCsvPath, append: false, encoding: Encoding.UTF8);
         _rawWriter.WriteLine(
-            "FrameIndex,Block,Trial,Time," +
-            "HeadPosX,HeadPosY,HeadPosZ," +
-            "HeadRotX,HeadRotY,HeadRotZ,HeadRotW," +
-            "LeftGazeDirX,LeftGazeDirY,LeftGazeDirZ,LeftConf," +
-            "RightGazeDirX,RightGazeDirY,RightGazeDirZ,RightConf," +
-            "GazeRawX,GazeRawY," +
+            "FrameIndex,Block,Trial,AbsTime," +
+            "HeadDeltaX,HeadDeltaY,HeadDeltaZ," +
             "GazeCorrX,GazeCorrY," +
             "IsBlink"
         );
         _rawWriter.Flush();
-    }
-
-    private void WriteRawRow(
-        int frameIndex, int block, int trial, float time,
-        Vector3 headPos, Quaternion headRot,
-        Vector3 leftDir, float leftConf,
-        Vector3 rightDir, float rightConf,
-        float gazeRawX, float gazeRawY,
-        float gazeCorrX, float gazeCorrY,
-        bool isBlink)
-    {
-        var sb = new StringBuilder();
-        sb.Append($"{frameIndex},{block},{trial},{time:F4},");
-        sb.Append($"{headPos.x:F4},{headPos.y:F4},{headPos.z:F4},");
-        sb.Append($"{headRot.x:F4},{headRot.y:F4},{headRot.z:F4},{headRot.w:F4},");
-        sb.Append($"{leftDir.x:F4},{leftDir.y:F4},{leftDir.z:F4},{leftConf:F3},");
-        sb.Append($"{rightDir.x:F4},{rightDir.y:F4},{rightDir.z:F4},{rightConf:F3},");
-        sb.Append($"{gazeRawX:F4},{gazeRawY:F4},");
-        sb.Append($"{gazeCorrX:F4},{gazeCorrY:F4},");
-        sb.Append(isBlink ? "1" : "0");
-        _rawWriter.WriteLine(sb.ToString());
     }
 }
