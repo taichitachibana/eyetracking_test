@@ -5,6 +5,7 @@ Shader "Custom/GazeMask"
         _GazePos  ("Gaze Position", Vector) = (0.5, 0.5, 0, 0)
         _Radius   ("Visible Radius", Float) = 0.25
         _Softness ("Edge Softness",  Float) = 0.15
+        _HorizontalScale ("Horizontal Scale", Float) = 1.0
     }
     SubShader
     {
@@ -36,10 +37,11 @@ Shader "Custom/GazeMask"
                 float4 clipPos : TEXCOORD1;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
-
+            
             float2 _GazePos;
             float  _Radius;
             float  _Softness;
+            float  _HorizontalScale;
 
             v2f vert(appdata v)
             {
@@ -56,14 +58,13 @@ Shader "Custom/GazeMask"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-                // クリップ座標からスクリーンUVを計算（視線の歪みを低減）
                 float2 screenUV = i.clipPos.xy / i.clipPos.w * 0.5 + 0.5;
 
                 float aspect = _ScreenParams.x / _ScreenParams.y;
-                float2 uvA   = float2(screenUV.x * aspect, screenUV.y);
-                float2 gazeA = float2(_GazePos.x  * aspect, _GazePos.y);
+                float2 delta = screenUV - _GazePos;
+                delta.x *= aspect / max(_HorizontalScale, 0.001);
 
-                float dist  = distance(uvA, gazeA);
+                float dist  = length(delta);
                 float alpha = smoothstep(_Radius, _Radius + _Softness, dist);
 
                 return fixed4(0, 0, 0, alpha);

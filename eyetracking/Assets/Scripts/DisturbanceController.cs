@@ -11,6 +11,8 @@ public class DisturbanceController : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float _displayDuration = 3.0f;
     [SerializeField] private float _interval = 60.0f;
+    [SerializeField] private GazeFollower _gazeFollower;
+    [SerializeField] private bool _waitForEyeTracking = true;
 
     [Header("Flow")]
     [SerializeField] private bool _randomizeMode = true;
@@ -24,7 +26,8 @@ public class DisturbanceController : MonoBehaviour
 
     [Header("Peripheral Mask")]
     [SerializeField] private float _centerExcludeDeg = 15.0f;
-    [SerializeField] private float _verticalOffsetDeg = -10.0f;
+    //[SerializeField] private float _verticalOffsetDeg = -10.0f;
+
 
     [Header("Particles")]
     [SerializeField] private int _particleCount = 200;
@@ -48,6 +51,7 @@ public class DisturbanceController : MonoBehaviour
     private Camera _cam;
 
     private bool _sessionActive = false;
+    private bool _startRequested = false;
     private bool _presenting = false;
     private float _timer = 0f;
     private float _intervalTimer = 0f;
@@ -67,13 +71,22 @@ public class DisturbanceController : MonoBehaviour
         _ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
+    private void Start()
+    {
+        EnsureCamera();
+    }
+
     private void Update()
     {
+        EnsureCamera();
         if (OVRInput.GetDown(_toggleButton) || Input.GetKeyDown(KeyCode.Space))
         {
             if (_sessionActive) StopSession();
-            else StartSession();
+            else _startRequested = true;
         }
+
+        if (!_sessionActive && _startRequested)
+            StartSession();
 
         if (!_sessionActive) return;
 
@@ -92,12 +105,25 @@ public class DisturbanceController : MonoBehaviour
 
     private void StartSession()
     {
+        if (_waitForEyeTracking && (_gazeFollower == null || !_gazeFollower.IsTrackingReady))
+        {
+            return;
+        }
+
+        if (_cam == null)
+        {
+            Debug.LogWarning("Main Camera was not found. Disturbance cannot start.");
+            return;
+        }
+
+        _startRequested = false;
         _sessionActive = true;
         BeginPresentation();
     }
 
     private void StopSession()
     {
+        _startRequested = false;
         _sessionActive = false;
         EndPresentation();
     }
@@ -170,6 +196,12 @@ public class DisturbanceController : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
             _particles[i].position = _cam.transform.TransformPoint(_localPositions[i]);
+    }
+
+    private void EnsureCamera()
+    {
+        if (_cam == null)
+            _cam = Camera.main;
     }
 
     private void ResetParticle(int i, bool scatter)

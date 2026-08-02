@@ -1,0 +1,1 @@
+SessionId,RecordingId,Condition,WindowIndex,WindowStartAbsTime,WindowEndAbsTime,WindowStartElapsedSec,WindowEndElapsedSec,SampleCount,ValidSampleCount,MeanGazeX,MeanGazeY,VarianceGazeX,VarianceGazeY,CovarianceXY,Dispersion,TrackingFailureCount

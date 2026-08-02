@@ -1,0 +1,1 @@
+SessionId,RecordingId,Condition,EventType,EventId,StartAbsTime,EndAbsTime,StartElapsedSec,EndElapsedSec,DurationMs,StartSampleIndex,EndSampleIndex,MaxClosure,MeanClosure,IsAccepted,TrackingInterrupted,EndReason

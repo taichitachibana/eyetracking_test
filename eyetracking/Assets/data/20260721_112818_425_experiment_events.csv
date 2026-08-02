@@ -1,0 +1,3 @@
+SessionId,RecordingId,Condition,AbsTime,ElapsedSec,EventType,Details
+20260721_112818_425,0,Unspecified,2026-07-21T11:28:18.4319186+09:00,0.006411,SessionCreated,
+20260721_112818_425,0,Unspecified,2026-07-21T11:28:28.6789186+09:00,10.252718,SessionEnded,

@@ -156,6 +156,8 @@ MonoBehaviour:
   _toggleButton: 1
   _displayDuration: 3
   _interval: 60
+  _gazeFollower: {fileID: 734925085}
+  _waitForEyeTracking: 1
   _randomizeMode: 1
   _fixedMode: 0
   _minSpeed: 1
@@ -163,7 +165,6 @@ MonoBehaviour:
   _innerRadius: 2.5
   _outerRadius: 4
   _centerExcludeDeg: 25
-  _verticalOffsetDeg: -100
   _particleCount: 300
   _minSize: 0.1
   _maxSize: 0.5
@@ -5251,8 +5252,10 @@ GameObject:
   m_Component:
   - component: {fileID: 382462862}
   - component: {fileID: 382462863}
+  - component: {fileID: 382462864}
+  - component: {fileID: 382462865}
   m_Layer: 0
-  m_Name: GazeDispersionLogger
+  m_Name: ExperimentLoggers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5282,13 +5285,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 382462860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05b39fbbf2d57fe47a5b48a696c516ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 72b9a6aba9a64ef690872ff7b592ec4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gazeTarget: {fileID: 128103756}
-  _trialDuration: 1.15
-  _trialsPerBlock: 10
-  _blinkConfidenceThreshold: 0.3
+  _toggleKey: 13
+  _startRecordingOnAwake: 0
+  _condition: 0
+  _disturbanceController: {fileID: 32681878}
+--- !u!114 &382462864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382462860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d601fe4e1234ce0b9a799132a72f688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _windowDuration: 0.5
+  _sampleRateHz: 60
+  _confidenceThreshold: 0.5
+--- !u!114 &382462865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382462860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c74b1a2e4541a2b99db665906af916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _faceExpressions: {fileID: 450178506}
+  _blinkStartThreshold: 0.49
+  _blinkEndThreshold: 0.2
+  _minimumBlinkDuration: 0.05
+  _sampleRateHz: 60
 --- !u!1 &450178500 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
@@ -5312,6 +5347,18 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &450178506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450178500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95044baf65b10c4e89b246d2f881ac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &639758759 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100006, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
@@ -5368,7 +5415,8 @@ MonoBehaviour:
   _centerEyeAnchor: {fileID: 171641812}
   _distance: 1
   _smoothSpeed: 15
-  _confidenceThreshold: 0
+  _confidenceThreshold: 0.5
+  _validTrackingDuration: 0.3
   _showDebugRay: 1
 --- !u!4 &734925086
 Transform:
@@ -5482,11 +5530,19 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: requestScenePermissionOnStartup
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: requestEyeTrackingPermissionOnStartup
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: expandMixedRealityCapturePropertySheet
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: requestFaceTrackingPermissionOnStartup
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 20000010189485334, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
@@ -5552,6 +5608,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: 1
       addedObject: {fileID: 450178501}
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 450178506}
     - targetCorrespondingSourceObject: {fileID: 100006, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 639758762}
@@ -5625,10 +5684,10 @@ MonoBehaviour:
   _radius: 0.1
   _softness: 0.15
   _opacity: 1
-  _enableShrink: 1
-  _initialRadius: 0.5
-  _finalRadius: 0.1
-  _shrinkDuration: 210
+  _enableShrink: 0
+  _initialVisibleFov: 90
+  _finalVisibleFov: 18.3
+  _shrinkDuration: 97
 --- !u!64 &1544121383
 MeshCollider:
   m_ObjectHideFlags: 0
