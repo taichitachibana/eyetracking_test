@@ -15,7 +15,7 @@ public class GazeMaskController : MonoBehaviour
     [SerializeField] private bool _enableShrink = false;
     [SerializeField, Range(0.1f, 179f)] private float _initialVisibleFov = 90f;
     [SerializeField, Range(0.1f, 179f)] private float _finalVisibleFov = 18.3f;
-    [SerializeField] private float _shrinkDuration = 60f;
+    [SerializeField] private float _shrinkDuration = 600f;
 
     private Material _mat;
     private Camera _cam;

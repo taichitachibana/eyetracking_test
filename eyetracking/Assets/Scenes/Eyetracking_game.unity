@@ -5652,7 +5652,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1544121381
 Transform:
   m_ObjectHideFlags: 0
@@ -5684,10 +5684,11 @@ MonoBehaviour:
   _radius: 0.1
   _softness: 0.15
   _opacity: 1
+  _horizontalScale: 1.5
   _enableShrink: 0
   _initialVisibleFov: 90
   _finalVisibleFov: 18.3
-  _shrinkDuration: 97
+  _shrinkDuration: 600
 --- !u!64 &1544121383
 MeshCollider:
   m_ObjectHideFlags: 0
