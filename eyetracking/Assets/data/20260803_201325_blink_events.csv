@@ -1,0 +1,2 @@
+SessionId,RecordingId,Condition,EventType,EventId,StartAbsTime,EndAbsTime,StartElapsedSec,EndElapsedSec,DurationMs,StartSampleIndex,EndSampleIndex,MaxClosure,MeanClosure,IsAccepted,TrackingInterrupted,EndReason
+20260803_201248_689,1,Unspecified,TrackingFailure,1,2026-08-03T20:33:37.6717956+09:00,2026-08-03T20:33:37.6987956+09:00,1248.982393,1249.009405,27.012,72673,72674,,,,1,RecordingStopped

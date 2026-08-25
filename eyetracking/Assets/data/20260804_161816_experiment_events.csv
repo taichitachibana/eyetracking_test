@@ -1,0 +1,4 @@
+SessionId,RecordingId,Condition,AbsTime,ElapsedSec,EventType,Details
+20260804_161815_294,1,Unspecified,2026-08-04T16:18:16.3273226+09:00,1.032962,SessionCreated,
+20260804_161815_294,1,Unspecified,2026-08-04T16:18:16.3283226+09:00,1.033868,RecordingStart,
+20260804_161815_294,1,Unspecified,2026-08-04T16:18:17.2693226+09:00,1.975319,RecordingStop,

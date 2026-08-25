@@ -1,0 +1,3 @@
+SessionId,RecordingId,Condition,WindowIndex,WindowStartAbsTime,WindowEndAbsTime,WindowStartElapsedSec,WindowEndElapsedSec,SampleCount,ValidSampleCount,MeanGazeX,MeanGazeY,VarianceGazeX,VarianceGazeY,CovarianceXY,Dispersion,TrackingFailureCount
+20260804_161815_294,1,Unspecified,0,2026-08-04T16:18:16.3293226+09:00,2026-08-04T16:18:16.8293226+09:00,1.035201,1.535201,74,0,,,,,,,74
+20260804_161815_294,1,Unspecified,1,2026-08-04T16:18:16.8293226+09:00,2026-08-04T16:18:17.2683226+09:00,1.535201,1.974378,26,0,,,,,,,26
